@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Billing & Invoices - HMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Billing & Invoices</h1>
+    <p>Generate patient bills and monitor payment statuses.</p>
+</div>
+
+<div class="form-container">
+    <h2><i class="fa-solid fa-file-invoice-dollar"></i> Generate Patient Invoice</h2>
+    <form action="{{ url_for('billing') }}" method="POST" class="grid-form">
+        <div class="form-group">
+            <label for="patient_id">Select Patient</label>
+            <select id="patient_id" name="patient_id" required>
+                <option value="" disabled selected>Choose a patient...</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }} (#{{ patient.id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Billing Amount ($)</label>
+            <input type="number" step="0.01" id="amount" name="amount" placeholder="150.00" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Payment Status</label>
+            <select id="status" name="status" required>
+                <option value="Paid">Paid</option>
+                <option value="Pending" selected>Pending</option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit" class="btn warning"><i class="fa-solid fa-receipt"></i> Issue Invoice</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-container">
+    <h2><i class="fa-solid fa-receipt"></i> Billing Records</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Invoice #</th>
+                <th>Patient Name</th>
+                <th>Amount</th>
+                <th>Payment Status</th>
+                <th>Date Issued</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in bills %}
+            <tr>
+                <td>#INV-{{ bill.id }}</td>
+                <td><strong>{{ bill.patient.name }}</strong></td>
+                <td>${{ "%.2f"|format(bill.amount) }}</td>
+                <td>
+                    {% if bill.status == 'Paid' %}
+                        <span class="badge status-green">Paid</span>
+                    {% else %}
+                        <span class="badge status-orange">Pending</span>
+                    {% endif %}
+                </td>
+                <td>{{ bill.date.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty-state">No billing transactions recorded yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

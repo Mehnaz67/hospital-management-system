@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - HMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Hospital Overview</h1>
+    <p>Real-time statistics and hospital management operations.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon"><i class="fa-solid fa-user-injured"></i></div>
+        <div class="stat-info">
+            <h3>{{ patients_count }}</h3>
+            <p>Total Patients</p>
+        </div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-icon"><i class="fa-solid fa-user-md"></i></div>
+        <div class="stat-info">
+            <h3>{{ doctors_count }}</h3>
+            <p>Available Doctors</p>
+        </div>
+    </div>
+
+    <div class="stat-card orange">
+        <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="stat-info">
+            <h3>{{ appointments_count }}</h3>
+            <p>Appointments</p>
+        </div>
+    </div>
+
+    <div class="stat-card purple">
+        <div class="stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+        <div class="stat-info">
+            <h3>${{ "%.2f"|format(revenue) }}</h3>
+            <p>Total Revenue</p>
+        </div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <h2>Quick Operations</h2>
+    <div class="action-buttons">
+        <a href="{{ url_for('patients') }}" class="btn primary"><i class="fa-solid fa-plus"></i> Register Patient</a>
+        <a href="{{ url_for('doctors') }}" class="btn secondary"><i class="fa-solid fa-user-plus"></i> Add Doctor</a>
+        <a href="{{ url_for('appointments') }}" class="btn success"><i class="fa-solid fa-calendar-plus"></i> Book Appointment</a>
+        <a href="{{ url_for('billing') }}" class="btn warning"><i class="fa-solid fa-receipt"></i> Generate Bill</a>
+    </div>
+</div>
+{% endblock %}

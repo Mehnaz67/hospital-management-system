@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Appointment Booking - HMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Appointment Booking</h1>
+    <p>Schedule consultations between registered patients and available doctors.</p>
+</div>
+
+<div class="form-container">
+    <h2><i class="fa-solid fa-calendar-plus"></i> Schedule New Appointment</h2>
+    <form action="{{ url_for('appointments') }}" method="POST" class="grid-form">
+        <div class="form-group">
+            <label for="patient_id">Select Patient</label>
+            <select id="patient_id" name="patient_id" required>
+                <option value="" disabled selected>Choose a patient...</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }} (#{{ patient.id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="doctor_id">Select Doctor</label>
+            <select id="doctor_id" name="doctor_id" required>
+                <option value="" disabled selected>Choose a doctor...</option>
+                {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">Dr. {{ doctor.name }} ({{ doctor.specialty }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Appointment Date</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">Time Slot</label>
+            <input type="time" id="time" name="time" required>
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit" class="btn success"><i class="fa-solid fa-calendar-check"></i> Confirm Booking</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-container">
+    <h2><i class="fa-solid fa-list-check"></i> Scheduled Appointments</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Appt ID</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Specialty</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>#{{ appt.id }}</td>
+                <td><strong>{{ appt.patient.name }}</strong></td>
+                <td>Dr. {{ appt.doctor.name }}</td>
+                <td><span class="badge specialty">{{ appt.doctor.specialty }}</span></td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td><span class="badge status-green">{{ appt.status }}</span></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="empty-state">No appointments scheduled. Book one using the form above.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

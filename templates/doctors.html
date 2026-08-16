@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Management - HMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Doctor Management</h1>
+    <p>Add medical staff entries and manage doctor availability schedules.</p>
+</div>
+
+<div class="form-container">
+    <h2><i class="fa-solid fa-user-md"></i> Add New Doctor</h2>
+    <form action="{{ url_for('doctors') }}" method="POST" class="grid-form">
+        <div class="form-group">
+            <label for="name">Doctor Name</label>
+            <input type="text" id="name" name="name" placeholder="Dr. Sarah Smith" required>
+        </div>
+
+        <div class="form-group">
+            <label for="specialty">Specialty / Department</label>
+            <input type="text" id="specialty" name="specialty" placeholder="Cardiology" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Contact Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 555-0144" required>
+        </div>
+
+        <div class="form-group">
+            <label for="availability">Status / Schedule</label>
+            <select id="availability" name="availability" required>
+                <option value="Available" selected>Available</option>
+                <option value="On Call">On Call</option>
+                <option value="On Leave">On Leave</option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit" class="btn primary"><i class="fa-solid fa-user-plus"></i> Add Doctor</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-container">
+    <h2><i class="fa-solid fa-stethoscope"></i> Medical Staff Directory</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Doctor Name</th>
+                <th>Specialty</th>
+                <th>Phone</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>#{{ doctor.id }}</td>
+                <td><strong>{{ doctor.name }}</strong></td>
+                <td><span class="badge specialty">{{ doctor.specialty }}</span></td>
+                <td>{{ doctor.phone }}</td>
+                <td>
+                    {% if doctor.availability == 'Available' %}
+                        <span class="badge status-green">{{ doctor.availability }}</span>
+                    {% elif doctor.availability == 'On Call' %}
+                        <span class="badge status-orange">{{ doctor.availability }}</span>
+                    {% else %}
+                        <span class="badge status-red">{{ doctor.availability }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty-state">No doctor profiles found. Add a doctor above.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

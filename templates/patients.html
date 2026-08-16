@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Management - HMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Patient Management</h1>
+    <p>Register new patients and view current patient records.</p>
+</div>
+
+<div class="form-container">
+    <h2><i class="fa-solid fa-user-plus"></i> Register New Patient</h2>
+    <form action="{{ url_for('patients') }}" method="POST" class="grid-form">
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="John Doe" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" placeholder="32" min="1" max="120" required>
+        </div>
+
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 555-0199" required>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john.doe@example.com">
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit" class="btn primary"><i class="fa-solid fa-check"></i> Register Patient</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-container">
+    <h2><i class="fa-solid fa-users"></i> Patient Directory</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Registered On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>#{{ patient.id }}</td>
+                <td><strong>{{ patient.name }}</strong></td>
+                <td>{{ patient.age }}</td>
+                <td>{{ patient.gender }}</td>
+                <td>{{ patient.phone }}</td>
+                <td>{{ patient.email or 'N/A' }}</td>
+                <td>{{ patient.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="empty-state">No patient records found. Register a new patient above.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
